@@ -1,114 +1,193 @@
-//mensaje inicial 1
-
 const nombre = prompt("Ingresá tu nombre");
 let opcion = "";
 let cantidadConsultas = 0;
+const consultasRealizadas = [];
 
-//Saludo 2
+class Lectura {
+  constructor(orientacion, nombre, precio, modalidad) {
+    this.orientacion = orientacion;
+    this.nombre = nombre;
+    this.precio = precio;
+    this.modalidad = modalidad;
+  }
 
+  // Calcular y mostrar el precio sin impuestos y el IVA.
+  verImpuestos() {
+    const precioSinImpuestos = this.precio / 1.21;
+    const impuesto = this.precio - precioSinImpuestos;
+
+    alert(
+      "Lectura: " +
+        this.nombre +
+        "\n" +
+        "Precio sin impuestos: $" +
+        precioSinImpuestos.toFixed(2) +
+        "\n" +
+        "IVA 21%: $" +
+        impuesto.toFixed(2) +
+        "\n" +
+        "Precio final: $" +
+        this.precio,
+    );
+
+    console.log("Precio sin impuestos: $" + precioSinImpuestos.toFixed(2));
+    console.log("Impuestos: $" + impuesto.toFixed(2));
+    console.log("Precio final: $" + this.precio);
+  }
+}
+// Datos de cada lectura
+
+const lecturaRelaciones = new Lectura(
+  "Comprender una relación",
+  "Lectura de Relaciones",
+  5000,
+  "On Line",
+);
+
+const lecturaEvolutiva = new Lectura(
+  "Comprender un aprendizaje personal",
+  "Lectura Evolutiva",
+  35000,
+  "Online",
+);
+
+const lecturaGeneral = new Lectura(
+  "Obtener una mirada General",
+  "Lectura General",
+  50000,
+  "Online",
+);
+const lecturaExperimental = new Lectura(
+  "Probar una nueva orientación",
+  "Consulta Experimental",
+  20000,
+  "Online",
+);
+
+const lecturaTransgeneracional = new Lectura(
+  "Comprender patrones familiares",
+  "Lectura Transgeneracional",
+  40000,
+  "Online",
+);
+
+// creo un array de lecturas
+const lecturas = [lecturaRelaciones, lecturaGeneral, lecturaEvolutiva];
+
+// agrego una lectura al inicio
+lecturas.unshift(lecturaExperimental);
+
+//agrego lectura al final
+lecturas.push(lecturaTransgeneracional);
+
+// verifico si esta la lectura de relaciones
+console.log(lecturas.includes(lecturaRelaciones));
+
+// Elimino la lectura Experimental
+lecturas.shift();
+
+for (const lectura of lecturas) {
+  console.log("Nombre: " + lectura.nombre);
+  console.log("Orientación: " + lectura.orientacion);
+  console.log("Precio: $" + lectura.precio);
+  console.log("Modalidad: " + lectura.modalidad);
+  console.log("--------------------");
+}
+
+//Saludo
 alert("Hola " + nombre + ". Te damos la bienvenida a Sabiduría Tarot.");
 
-//tipos de lecturas
-
-function recomendarLectura(opcionElegida) {
-  let mensaje = "";
-
-  switch (opcionElegida) {
-    case "1":
-      mensaje = "Te recomendamos la Lectura de Relaciones";
-      break;
-    case "2":
-      mensaje = "Te recomendamos la Lectura General";
-      break;
-    case "3":
-      mensaje = "Te recomendamos la Lectura Evolutiva";
-      break;
-    default:
-      mensaje = "La opción es incorrecta. Ingresá un número del 1 al 3.";
-  }
-
-  return mensaje;
-}
-
-// precio lecturas
-function consultarPrecio(opcionElegida) {
-  let precio = "";
-
-  switch (opcionElegida) {
-    case "1":
-      precio = "El valor de la Lectura de relaciones es $30.000.";
-      break;
-    case "2":
-      precio = "El valor de la Lectura General es $50.000.";
-      break;
-    case "3":
-      precio = "El valor de la Lectura Evolutiva es $35.000.";
-      break;
-  }
-  return precio;
-}
 //opciones para elegir
 do {
-  opcion = prompt(
-    "Elegí una opción\n" +
-      "1. Comprender una relación\n" +
-      "2. Obtener una mirada General\n" +
-      "3. Comprender un aprendizaje personal\n" +
-      "Escribí SALIR para finalizar",
-  ).toLowerCase();
+  let menu = "Elegí una opción\n";
+  let numero = 1;
+
+  //recorro cada lectura del array y agrego al menú el número y su orientación (en una nueva línea)
+
+  for (const lectura of lecturas) {
+    menu += numero + ". " + lectura.orientacion + "\n";
+    numero++;
+  }
+
+  menu += "Escribí SALIR para finalizar";
+  opcion = prompt(menu).toLowerCase();
 
   switch (opcion) {
-    case "1":
-    case "2":
-    case "3":
-      const recomendacion = recomendarLectura(opcion);
-
-      alert(recomendacion);
-      console.log(recomendacion);
-
-      cantidadConsultas++;
-
-      // consulta de precio
-      let quierePrecio = prompt(
-        "¿Querés consultar el precio de esta lectura? Escribí SI o NO.",
-      ).toLowerCase();
-
-      while (quierePrecio !== "si" && quierePrecio !== "no") {
-        alert("Opción incorrecta. Escribí SI o NO.");
-        console.log("Opción incorrecta en la consulta de precio.");
-
-        quierePrecio = prompt(
-          "¿Querés consultar el precio de esta lectura? Escribí SI o NO.",
-        ).toLowerCase();
-      }
-
-      if (quierePrecio === "si") {
-        const precio = consultarPrecio(opcion);
-        alert(precio);
-        console.log(precio);
-      }
-      break;
-
     case "salir":
       break;
 
     default:
-      alert("Opción incorrecta. Ingresá un número del 1 al 3 o escribí SALIR.");
-      console.log("Opción incorrecta ingresada por el usuario.");
+      const posicion = parseInt(opcion) - 1;
+
+      if (posicion >= 0 && posicion < lecturas.length) {
+        const lecturaElegida = lecturas[posicion];
+
+        alert("Te recomendamos la " + lecturaElegida.nombre);
+
+        cantidadConsultas++;
+
+        //si en el array consultasRealizadas todavia no contiene el l.e. se agrega]
+        if (!consultasRealizadas.includes(lecturaElegida))
+          consultasRealizadas.push(lecturaElegida);
+
+        // consulta de precio
+        let quierePrecio = prompt(
+          "¿Querés consultar el precio de esta lectura? Escribí SI o NO.",
+        ).toLowerCase();
+
+        while (quierePrecio !== "si" && quierePrecio !== "no") {
+          alert("Opción incorrecta. Escribí SI o NO.");
+          console.log("Opción incorrecta en la consulta de precio.");
+
+          quierePrecio = prompt(
+            "¿Querés consultar el precio de esta lectura? Escribí SI o NO.",
+          ).toLowerCase();
+        }
+        if (quierePrecio === "si") {
+          lecturaElegida.verImpuestos();
+        }
+      } else {
+        alert(
+          "Opción incorrecta. Ingresá un número del 1 al " +
+            lecturas.length +
+            " o escribí SALIR.",
+        );
+
+        console.log("Opción incorrecta ingresada por el usuario.");
+      }
   }
+  // le digo que repita hasta obtener salir
 } while (opcion !== "salir");
 
-const crearResumen = (nombreUsuario, cantidad) => {
-  return (
-    "Gracias, " +
-    nombreUsuario +
-    ". Cantidad de orientaciones consultadas: " +
-    cantidad +
-    "."
-  );
+//armo resumen
+
+const crearResumen = (nombreUsuario, cantidad, consultas) => {
+  let resumen = "Gracias, " + nombreUsuario + ".\n\n";
+
+  resumen += "Cantidad de consultas realizadas: " + cantidad + "\n\n";
+
+  for (const lectura of consultas) {
+    resumen +=
+      "Lectura: " +
+      lectura.nombre +
+      "\n" +
+      "Orientación: " +
+      lectura.orientacion +
+      "\n" +
+      "Precio: $" +
+      lectura.precio +
+      "\n" +
+      "Modalidad: " +
+      lectura.modalidad +
+      "\n\n";
+  }
+  return resumen;
 };
-const resumenFinal = crearResumen(nombre, cantidadConsultas);
 
+const resumenFinal = crearResumen(
+  nombre,
+  cantidadConsultas,
+  consultasRealizadas,
+);
 alert(resumenFinal);
-
 console.log(resumenFinal);
